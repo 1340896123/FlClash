@@ -40,6 +40,7 @@ jobs:
       - name: Widget, proxies view and lint suites
         run: dart run tool/test.dart test/widgets test/lint test/views/proxies_list_test.dart test/views/proxies_group_offsets_test.dart -- --reporter expanded
   windows:
+    if: ${{ !contains(github.event.head_commit.message, '[tests-only]') }}
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
