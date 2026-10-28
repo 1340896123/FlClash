@@ -294,7 +294,7 @@ class ProxiesAction extends _$ProxiesAction {
     }
     await Clipboard.setData(
       ClipboardData(
-        text: writeYaml({
+        text: yaml.encode({
           'proxies': [definition],
         }),
       ),
