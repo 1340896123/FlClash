@@ -961,33 +961,39 @@ void main() {
           .setMockMethodCallHandler(SystemChannels.platform, null);
     });
 
-    test('copies the full node as Clash YAML without changing selection', () async {
-      const definition = {
-        'name': 'Mieru 🇺🇸 : #1',
-        'type': 'mieru',
-        'server': 'node.example.com',
-        'port': 443,
-        'username': 'user',
-        'password': 'true: #secret\nsecond line',
-        'transport': 'TCP',
-        'multiplexing': 'MULTIPLEXING_HIGH',
-        'dialer-proxy': 'Relay',
-      };
-      when(() => core.getProxyDefinition('Mieru 🇺🇸 : #1')).thenAnswer(
-        (_) async => definition,
-      );
-      final profile = _selectedProfile('Other node');
-      final container = buildContainer(profile: profile);
+    test(
+      'copies the full node as Clash YAML without changing selection',
+      () async {
+        const definition = {
+          'name': 'Mieru 🇺🇸 : #1',
+          'type': 'mieru',
+          'server': 'node.example.com',
+          'port': 443,
+          'username': 'user',
+          'password': 'true: #secret\nsecond line',
+          'transport': 'TCP',
+          'multiplexing': 'MULTIPLEXING_HIGH',
+          'dialer-proxy': 'Relay',
+        };
+        when(
+          () => core.getProxyDefinition('Mieru 🇺🇸 : #1'),
+        ).thenAnswer((_) async => definition);
+        final profile = _selectedProfile('Other node');
+        final container = buildContainer(profile: profile);
 
-      await actionOf(container).copyProxy('Mieru 🇺🇸 : #1');
+        await actionOf(container).copyProxy('Mieru 🇺🇸 : #1');
 
-      expect(copied, hasLength(1));
-      expect(loadYaml(copied.single), {
-        'proxies': [definition],
-      });
-      expect(container.read(profilesProvider).single.selectedMap, profile.selectedMap);
-      verifyNever(() => core.changeProxy(any()));
-    });
+        expect(copied, hasLength(1));
+        expect(loadYaml(copied.single), {
+          'proxies': [definition],
+        });
+        expect(
+          container.read(profilesProvider).single.selectedMap,
+          profile.selectedMap,
+        );
+        verifyNever(() => core.changeProxy(any()));
+      },
+    );
 
     test('leaves the clipboard alone when the node is gone', () async {
       when(() => core.getProxyDefinition('Gone')).thenAnswer((_) async => null);
@@ -1006,13 +1012,21 @@ void main() {
       expect(copied, isEmpty);
     });
 
-    test('propagates a core failure without copying partial information', () async {
-      when(() => core.getProxyDefinition('HK')).thenThrow(StateError('offline'));
+    test(
+      'propagates a core failure without copying partial information',
+      () async {
+        when(
+          () => core.getProxyDefinition('HK'),
+        ).thenThrow(StateError('offline'));
 
-      await expectLater(actionOf(buildContainer()).copyProxy('HK'), throwsStateError);
+        await expectLater(
+          actionOf(buildContainer()).copyProxy('HK'),
+          throwsStateError,
+        );
 
-      expect(copied, isEmpty);
-    });
+        expect(copied, isEmpty);
+      },
+    );
 
     test('propagates a clipboard failure', () async {
       when(() => core.getProxyDefinition('HK')).thenAnswer(

@@ -113,7 +113,9 @@ void main() {
   }
 
   for (final type in ProxyCardType.values) {
-    testWidgets('right click copies the targeted ${type.name} node', (tester) async {
+    testWidgets('right click copies the targeted ${type.name} node', (
+      tester,
+    ) async {
       await pumpCards(tester, type);
 
       await rightClick(tester, find.byKey(const ValueKey('proxy 1')));
@@ -153,7 +155,9 @@ void main() {
     });
   }
 
-  testWidgets('a group without a node definition has no copy action', (tester) async {
+  testWidgets('a group without a node definition has no copy action', (
+    tester,
+  ) async {
     await pumpCards(tester, ProxyCardType.standard, proxyType: 'Selector');
 
     await rightClick(tester, find.byKey(const ValueKey('proxy 0')));
