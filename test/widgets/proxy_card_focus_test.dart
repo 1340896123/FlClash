@@ -118,7 +118,7 @@ void main() {
     ) async {
       await pumpCards(tester, type);
 
-      await rightClick(tester, find.byKey(const ValueKey('proxy 1')));
+      await rightClick(tester, find.byType(ProxyCard).at(1));
       await tester.pumpAndSettle();
       expect(find.text('Copy'), findsOneWidget);
       expect(_RecordingProxiesAction.copied, isEmpty);
@@ -160,7 +160,7 @@ void main() {
   ) async {
     await pumpCards(tester, ProxyCardType.standard, proxyType: 'Selector');
 
-    await rightClick(tester, find.byKey(const ValueKey('proxy 0')));
+    await rightClick(tester, find.byType(ProxyCard).first);
     await tester.pumpAndSettle();
 
     expect(find.text('Select'), findsOneWidget);
